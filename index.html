@@ -14,6 +14,7 @@ Stock: <input type="text" id="stock" value="FB">
 <input type="button" id="submit" value="Click me!">
 <br>
 <div id="news"></div>
+<div id="tip" style="display:none">Click on a date to see the news from that date!</div>
 <div height="600px">
 <canvas id="chart" width="100%" height="600px"></canvas>
 </div>
@@ -28,7 +29,6 @@ function addNewsItem(it) {
 
 function clearNewsItems() {
 	$("#news").empty();
-
 }
 
 const zoomOptions = {
@@ -43,10 +43,12 @@ const zoomOptions = {
     mode: 'x',
   }
 };
-
+var chart;
 function addChart(stock, xaxis, yaxis) {
+	$('#tip').show();
 	var ctx = document.getElementById('chart').getContext('2d');
-	var chart = new Chart(ctx, {
+	if (chart) chart.destroy();
+	chart = new Chart(ctx, {
 		type: 'line',
 		data: {
 			labels: xaxis,
@@ -69,6 +71,7 @@ function addChart(stock, xaxis, yaxis) {
 		      zoom: zoomOptions
 		    },
     		onClick: function(evt, activeElements) {
+    			$('#tip').hide();
 		      // var i = activeElements[0]._index; // latter version
 		      var i = activeElements[0].index;
 		      fetchNews(stock, xaxis[i]);
